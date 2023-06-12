@@ -129,8 +129,8 @@ bool Field::boundChk(const pnt& in) const
 }
 void Field::surround(pnt& in, std::vector<pnt>& out) const
 {
-	std::size_t& X = in.first;
-	std::size_t& Y = in.second;
+	const std::size_t& X = in.first;
+	const std::size_t& Y = in.second;
 
 	// a b c  
 	// d _ e 

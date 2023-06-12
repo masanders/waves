@@ -11,14 +11,17 @@ Display::Display(const std::size_t xdim_,
 	sleeptm = sleeptm_;
 	logval = logval_;
 	logdelta = 0.1;
-	fxdim = (xdim / scale) / 2;
+	//CONTOUR
+	//fxdim = (xdim / scale) / 2;
+	fxdim = xdim / scale;
 	fydim = ydim / scale;
 	buffsize = fxdim * fydim * 4;
 	pert = false;
 	field.setDim(fxdim, fydim);
 
-	contour.init(xdim/2, ydim, logval);
-	contour.form(logval);
+	//CONTOUR
+	//contour.init(xdim/2, ydim, logval);
+	//contour.form(logval);
 		
 
 	pixels.resize(buffsize, 0);
@@ -49,27 +52,18 @@ void Display::show()
 {
 	window.create(sf::VideoMode(xdim, ydim), WINDOW_NAME);
 
-
+	// MAIN RENDER LOOP
 	while (window.isOpen())
 	{
 		this->procEvents(); 
 
 		if (pert)
-		{
-			pnt where = { fxdim / 2, fydim / 2 };
-			std::vector<pnt> lower;
-			field.surround(where, lower);
-			field.perturbe(where,
-				240);
-			for (auto i : lower)
-				field.perturbe(i, (240 / (8 / field.strength())));
-			pert = false;
-		}
+			this->perturbe();
 		this->feed();
 
 		window.clear(sf::Color::Black);
 		window.draw(sprite);
-		window.draw(contour.getSprite());
+		//window.draw(contour.getSprite());
 		window.display();
 
 		field.step();
@@ -80,7 +74,16 @@ void Display::show()
 void Display::perturbe()
 {
 	std::cout << "Perturbing field.\n";
-	pert = true;
+
+	pnt where = { fxdim / 2, fydim / 2 };
+	std::vector<pnt> lower;
+
+	field.surround(where, lower);
+	field.perturbe(where, 240);
+	for (auto i : lower)
+		field.perturbe(i, (240 / (8 / field.strength())));
+
+	pert = false;
 }
 
 void Display::setsleeptime(const std::size_t in)
@@ -181,7 +184,7 @@ void Display::procEvents()
 				|| event.key.code == sf::Keyboard::Escape)
 				window.close();
 			else if (event.key.code == sf::Keyboard::P)
-				this->perturbe();
+				pert = true;
 			else if (event.key.code == sf::Keyboard::Up)
 				field.tighten();
 			else if (event.key.code == sf::Keyboard::Down)
@@ -195,7 +198,7 @@ void Display::procEvents()
 }
 void Display::buildSixths()
 {
-	sixths[5] = std::log1p(MAX) / std::log(logval);
+	sixths[5] = std::log(MAX) / std::log(logval);
 	sixths[0] = sixths[5] / 6.0;
 	sixths[1] = sixths[0] * 2;
 	sixths[2] = sixths[0] * 3;

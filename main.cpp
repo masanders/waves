@@ -7,7 +7,7 @@
 int main(int argc, char** argv)
 {
 	try {
-		Display disp(1200, 600, 4);
+		Display disp(800, 800, 4);
 		disp.show();
 	}
 	catch (std::out_of_range e)
@@ -23,6 +23,5 @@ int main(int argc, char** argv)
 }
 
 /*
-  - Neative averages are not combine correctly
   - Non-square windows translate incorrectly from field to display
 */
