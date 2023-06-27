@@ -35,7 +35,7 @@ public:
 	void show();
 
 	void perturbe();
-	void setsleeptime(const std::size_t in);
+	void setSleepTime(const std::size_t in);
 
 	std::size_t width() const;
 	std::size_t height() const;
@@ -48,6 +48,13 @@ private:
 	void buildSixths();
 	void raiseLog();
 	void lowerLog();
+
+	void blk1(const std::size_t loc, const double skew);
+	void blk2(const std::size_t loc, const double skew);
+	void blk3(const std::size_t loc, const double skew);
+	void blk4(const std::size_t loc, const double skew);
+	void blk5(const std::size_t loc, const double skew);
+	void blk6(const std::size_t loc, const double skew);
 
 	std::size_t xdim, ydim, fxdim, fydim,
 		buffsize, scale, sleeptm;

@@ -7,7 +7,7 @@
 int main(int argc, char** argv)
 {
 	try {
-		Display disp(800, 800, 4);
+		Display disp(1000, 1000, 3);
 		disp.show();
 	}
 	catch (std::out_of_range e)

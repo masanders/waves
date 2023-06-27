@@ -1,5 +1,11 @@
 #include "Field.h"
 
+/* ========================================================
+ * Field::Field()
+ *	purpose: Default constructor
+ *	input: none
+ *  output: none
+ */
 Field::Field()
 {
 	xdim = 0;
@@ -8,6 +14,12 @@ Field::Field()
 	coupling = 1.0f;
 }
 
+/* ========================================================
+ * Field::Field()
+ *	purpose: Primary constructor
+ *	input: Initial values for xdim and ydim
+ *  output: none
+ */
 Field::Field(const std::size_t xdim_, const std::size_t ydim_)
 {
 	xdim = xdim_;
@@ -19,6 +31,12 @@ Field::Field(const std::size_t xdim_, const std::size_t ydim_)
 	data[!live].resize(xdim * ydim, 0);
 }
 
+/* ========================================================
+ * Field::setDim()
+ *	purpose: Set function for X and Y dimensions
+ *	input: Set values for xdim and ydim
+ *  output: This field's xdim and ydim are set
+ */
 void Field::setDim(const std::size_t xdim_, const std::size_t ydim_)
 {
 	xdim = xdim_;
@@ -29,38 +47,81 @@ void Field::setDim(const std::size_t xdim_, const std::size_t ydim_)
 	data[!live].resize(xdim * ydim, 0);
 }
 
+/* ========================================================
+ * Field::setCoupling()
+ *	purpose: Set function for the field's coupling value
+ *	input: in - new coupling value
+ *  output: none
+ */
 void Field::setCoupling(const float in)
 {
 	coupling = in;
 }
 
+/* ========================================================
+ * Field::tighten()
+ *	purpose: Raise the field's coupling value by 10%
+ *	input: none
+ *  output: Coupling value is raised 
+ */
 void Field::tighten()
 {
 	coupling += 0.1;
 	std::cout << "Coupling raised to: " << coupling << '\n';
 }
 
+/* ========================================================
+ * Field::relax()
+ *	purpose: Lower the field's coupling value by 10%
+ *	input: none
+ *  output: Coupling value is lowered
+ */
 void Field::relax()
 {
 	coupling -= 0.1;
 	std::cout << "Coupling lowerd to: " << coupling << '\n';
 }
 
+/* ========================================================
+ * Field::size()
+ *	purpose: Give the size of the underlying data object
+ *	input: none
+ *  output: RETURNED - Size of data object
+ */
 std::size_t Field::size() const
 {
 	return data[live].size();
 }
 
+/* ========================================================
+ * Field::strength()
+ *	purpose: Get function for coupling value
+ *	input: none
+ *  output: RETURNED - value of coupling constant
+ */
 float Field::strength() const
 {
 	return coupling;
 }
 
+/* ========================================================
+ * Field::operator [] ()
+ *	purpose: Get data value by an index, internalize 
+ *		which frame is live
+ *	input: i - index value of data being addressed
+ *  output: RETURNED - Value of live data being addressed
+ */
 int Field::operator[] (const std::size_t i) const
 {
 	return data[live][i];
 }
 
+/* ========================================================
+ * Field::step()
+ *	purpose: Propagate the wave function
+ *	input: none
+ *  output: The data object is altered as needed
+ */
 void Field::step()
 {
 	for (std::size_t i = 0; i < data[live].size(); i++)
@@ -77,13 +138,18 @@ void Field::step()
 			cnt++;
 		}
 		cnt = cnt / coupling;
-		//data[!live][i] = std::abs((total / cnt) - data[live][i]);
 		data[!live][i] = (total / cnt);
 	}
 	
 	live = !live;
 }
 
+/* ========================================================
+ * Field::randomPopulate()
+ *	purpose: Propagate the wave function
+ *	input: none
+ *  output: The data object is altered as needed
+ */
 void Field::randomPopulate()
 {
 	for (std::size_t i = 0; i < data[live].size(); i++)
